@@ -89,9 +89,9 @@ def omes(fastaHash,  length, start_pos):
 
             cov = math.fsum(omesList) / readSize
             #mInfo = math.fsum(m_infoList)
-#            if(cov > 0):
-#                print (i + start_pos), "\t", (j + start_pos), "\t", cov,  "\t", math.fsum(omesList) / len(omesList)
-            print (i + start_pos), "\t", (j + start_pos), "\t", cov,  "\t"#, mInfo
+            if(cov > 0):
+ #               print (i + start_pos), "\t", (j + start_pos), "\t", cov,  "\t", math.fsum(omesList) / len(omesList)
+                print (i + start_pos), "\t", (j + start_pos), "\t", cov,  "\t"#, mInfo
     
 
 #=========================="singleEntropy"==========================#
@@ -147,15 +147,20 @@ if __name__ == '__main__':
     
     (~w~)v
     
+    Extra Help:
+       - the '-st' option is for user to tell omes.py what's the starting position
+         of the given sequence input. Since it only takes in fasta sequences, omes.py
+         has no idea what the actual positions of each residue is. Hence defaults the
+         first residue to be labelled position 1. If, for example, '-st 200' is entered,
+         then the fasta sequence will start at position 200.
+    
     *****
     """
     parser = argparse.ArgumentParser()
     #required arguments
     parser.add_argument('-f', '--file', help='Filename or directory of sequence(s) in FASTA format.',  required = True)    
     
-    #optional arguments    
-    
-    parser.add_argument('-d', '--directory',  help='Directory path to save the files. If none specified, saves in local directory.')
+    #optional arguments
     parser.add_argument('-st',  '--start_pos',  help = 'Starting position of the fasta file. If left blank defaults at 1.',  type = int)    
     
     if len(sys.argv) <= 1:

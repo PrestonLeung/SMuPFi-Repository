@@ -38,16 +38,16 @@ class InputError (Error):
 
 
 #==========================="okFile"===========================#        
-#Check if the given file is a file. 1 means yes, 0 means no.
+#Check if the given file is a file.
 
 def okFile(file):
     if(os.path.isfile(file)):
-        return 1
+        return True
     else:
-        return 0
+        return False
 
 #==========================="extractLine"===========================#        
-
+# Extract information from file.
 
 def extractLine(file,  column,  delimiter):
     
@@ -78,7 +78,8 @@ def extractLine(file,  column,  delimiter):
 def printData(aList):
     
     if(WantOutput):
-        openFile = open(OutputFileName, 'w')        
+        openFile = open(OutputFileName, 'w') 
+        #openFile = sys.stdout
     else:
         openFile = sys.stdout
     openFile.write( "nt-Position".ljust(20)), openFile.write("aa-Position".ljust(20))
@@ -276,13 +277,8 @@ if __name__ == '__main__':
     Ver. 0.01
            
     Extra Help:
-        - For argument -c, the column count starts from 0. E.g. First column is 0, second column is 1 etc.
-        
-        - For argument -p, -m and -fq, the positions are in accordance to the columns selected. For example:
-          if the columns in option -c are 1,5,6 and the 5th column is where nt positions are placed, then -p should
-          be 1. If the 6th column is where mutations are placed, then -m should be 2 etc.
-          
-          *Note: This tool only takes in 3 columns of data. Any extra information will be ignored. 
+           
+        *Note: This tool only takes in 3 columns of data. Any extra information will be ignored. 
         
         - If unsure if option -rp is needed, use:
             cat -A FILE
@@ -300,11 +296,10 @@ if __name__ == '__main__':
     #Required Arguments
     parser.add_argument('-f', '--file', help='File to extract snp information from.',  required = True)
     parser.add_argument('-r', '--referencefilename', help='Filename of reference file.',  required = True) 
-    parser.add_argument('-d',  '--delimiter', help='Character(s) used to clearly separate columns.', required = True)
-    parser.add_argument('-c',  '--columns',  help='Data desired from columns separated by user-defined delimiter.',  required = True)
+    parser.add_argument('-d',  '--delimiter', help='Character(s) used to clearly separate columns.', required = True)    
     parser.add_argument('-p',  '--pos_column',  help='The column position storing the positions of mutations',  required = True,  type = int)
-    parser.add_argument('-m',  '--pos_mutation',  help='The column position storing the mutations',  required = True,  type = int)
-    parser.add_argument('-fq',  '--pos_freq',  help='The column position storing the frequencies',  required = True,  type = int)
+    parser.add_argument('-m',  '--mut_column',  help='The column position storing the mutations',  required = True,  type = int)
+    parser.add_argument('-fq',  '--freq_column',  help='The column position storing the frequencies',  required = True,  type = int)
     parser.add_argument('-sc', '--starting_codon',  help='starting codon position of the coding region',  required = True,  type = int)
     
     #Optional Arguments
@@ -331,34 +326,12 @@ if __name__ == '__main__':
         if(args.filter <= 0):        
                 raise InputError(args.filter,  "Filter value must be greater than 0.0. Given: ")
     elif(args.filter == None):        
-        pass    
-        #raise InputError(args.filter,  "Filter value must be greater than 0.0. Given: ")
+        pass            
     elif(args.filter <= 0):        
                 raise InputError(args.filter,  "Filter value must be greater than 0.0. Given: ")    
     if(args.logTen):
         import math
         LogFrequencies = True
-    if(args.columns):    
-        if(re.search('-', args.columns)):            
-            if(not re.search(r'^\d+-\d+$', args.columns)):        
-                raise InputError(args.columns, "Invalid Columns: ")
-            scope = re.search(r'^(\d+)-(\d+)$', args.columns) 
-            if(int(scope.group(1)) > int(scope.group(2))):
-                raise InputError(args.columns,  "Invalid Columns: ")
-            columnList = args.columns.split('-')
-            columnList = range(int(columnList[0]),  int(columnList[1]) + 1)
-        elif(re.search(',',  args.columns)):            
-            if(re.search('[^0-9,]', args.columns)):
-                raise InputError(args.columns,  "Invalid Columns: ")
-            columnList = args.columns.split(',')
-            while('' in columnList):
-                columnList.remove('')
-            if(len(columnList) < 1):
-                raise InputError(args.columns,  "Invalid Columns: ")            
-        else:
-            if(re.search('[^\d+]',  args.columns)):
-                raise InputError(args.columns,  "Invalid Column: ")
-            columnList = [args.columns]
     if(not args.output_file):
         WantOutput = False        
     else:
@@ -373,13 +346,14 @@ if __name__ == '__main__':
         reparsedFile = reparse(args.file)    
     
     if(Reparse):
-        rawList = extractLine(reparsedFile, columnList,  args.delimiter)
+        rawList = extractLine(reparsedFile, [args.pos_column, args.freq_column,  args.mut_column],  args.delimiter)
     else:
-        rawList = extractLine(args.file, columnList,  args.delimiter)        
-   
-    dataList = changeTypeThenSort(rawList, args.pos_column, args.pos_freq,  args.pos_mutation,  args.sortby_freq)    
+        rawList = extractLine(args.file, [args.pos_column, args.freq_column,  args.mut_column],  args.delimiter)        
+    
+    dataList = changeTypeThenSort(rawList, 0, 1, 2, args.sortby_freq)    
+
     refFile = getFile(args.referencefilename)
-    allDataList = translation(dataList,  refFile, args.starting_codon, args.pos_column, args.pos_freq,  args.pos_mutation,  args.filter)    
+    allDataList = translation(dataList,  refFile, args.starting_codon, 0, 1, 2, args.filter)    
     printData(allDataList)    
     if(args.easyOutput):
         printEasy(allDataList)

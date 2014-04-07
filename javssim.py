@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# !/usr/bin/python
 #
 #JaVSSimDupplet:
 #   Version 0.06
@@ -359,17 +359,17 @@ if __name__ == '__main__':
         single, double = dataExtraction(tempList, mCombination)
         del tempList
     else:
-        raise InputError(args.file, "Invalid file: ")	
+        raise InputError(args.file, "Invalid file: ")   
     if(args.destination):
-		if(not os.path.isdir(args.destination)):
-			raise InputError(args.destination, "Invalid saving destination: ")
-		else:
-		    SavePath = args.destination		
-    FileName = re.sub('\..*$', '', args.name)    
-    if(args.easyoutput):		
-		MakeEasy = True
+        if(not os.path.isdir(args.destination)):
+            raise InputError(args.destination, "Invalid saving destination: ")
+        else:
+            SavePath = args.destination     
+    FileName = re.sub('\..*$', '', args.name)    j
+    if(args.easyoutput):        
+        MakeEasy = True
     
-    #print "MutX\tX-OnlyFreq\tMutY\tY-OnlyFreq\tXYFreq\tJ\tJ_rand\tJ_se\tP\tZ"
+    
     for doubleMutXY in double.iterkeys():
         singleMutX = doubleMutXY.split('|')[0]
         singleMutY = doubleMutXY.split('|')[1]        
@@ -412,12 +412,6 @@ if __name__ == '__main__':
         zsList.append(math.ceil(z_score * 1000.0)/1000.0)                
         pvList.append(math.ceil(p_value * 1000.0)/1000.0)
         
-        
-        
-#        print singleMutX, "\t", onlyXFreq, "\t", 
-#        print singleMutY, "\t", onlyYFreq, "\t",         
-#        print mutXYFreq, "\t", 
-#        print obsJ, "\t", j_rand, "\t", j_se, "\t", p_value, "\t", z_score
     indicies = np.lexsort(keys = (pvList, zsList))
 
     printStats(indicies, mutXList, onlyXList, mutYList, onlyYList,

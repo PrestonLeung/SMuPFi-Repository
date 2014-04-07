@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # Ver. 0.002
-
+#renamed from jaccardToCircos2 -> jaccardToCircos
 
 import re,  os,  math,  argparse
 import sys
@@ -27,102 +27,12 @@ def filterAll(mutX,  mutXFreq,  xy_only_freq):
                  re.search('\s*[a-z*-](\d+)[a-z*-]',  mutX,  re.I).group(1)) #Position
     
     
-#================================"printCircosFormat"================================#
-
-def printHistogramFormat(id,  dictionary,  outputFileName):
-    outHandle = open(outputFileName+".histogram", 'w')
-    for key in dictionary.iterkeys():
-        
-        #This prints histogram format                
-        outHandle.write(id + " ")
-        outHandle.write(dictionary[key][2] + " ")
-        outHandle.write(dictionary[key][2] + " ")
-        outHandle.write(str(dictionary[key][1]) +"\n")
-        
-    outHandle.close()
-    print "Histogram done."
-
-#================================"makeHistogram"================================#
-
-def makeHistogram(openFile, identity, outputFileName, region='N'):
-    
-    dict = {}
-    for line in openFile:
-        
-        linesplit = re.split('\|',  line)        
-        if(float(linesplit[8]) > P_Threshold):
-            continue
-        
-        mutX = linesplit[0].strip()
-        mutXonlyFreq  = float(linesplit[1])
-        mutY = linesplit[2].strip()
-        mutYonlyFreq = float(linesplit[3])
-        only_xyFreq = float(linesplit[4])                
-        #z_score = linesplit[9] (reminder)
-        
-        if(not mutX in dict):
-            pos = re.search('\s*[a-z*-](\d+)[a-z*-]',  mutX,  re.I)
-            if(HasRegion):    
-                if(int(pos.group(1))>= int(region.group(1)) and int(pos.group(1)) <=int(region.group(2))):
-                    dict[mutX] = filterAll(mutX,  mutXonlyFreq,  only_xyFreq)
-            else:
-                dict[mutX] = filterAll(mutX,  mutXonlyFreq,  only_xyFreq)  
-        
-        if(not mutY in dict):
-            pos = re.search('\s*[a-z*-](\d+)[a-z*-]',  mutY,  re.I)
-            if(HasRegion):
-                if(int(pos.group(1)) >= int(region.group(1)) and int(pos.group(1)) <=int(region.group(2))):
-                    dict[mutY] = filterAll(mutY,  mutYonlyFreq,  only_xyFreq) 
-            else:                    
-                dict[mutY] = filterAll(mutY,  mutYonlyFreq,  only_xyFreq) 
-
-    printHistogramFormat(identity, dict, outputFileName)
-
-#================================"makeHistogram_T"================================#
-
-def makeHistogram_T(openFile, identity, outputFileName, region='N'):
-    
-    dict = {}
-    for line in openFile:
-        
-        linesplit = re.split('\|',  line)        
-        if(float(linesplit[10]) > P_Threshold):
-            continue
-        
-        mutX = linesplit[0].strip()
-        mutXonlyFreq  = float(linesplit[1])
-        mutY = linesplit[2].strip()
-        mutYonlyFreq = float(linesplit[3])
-        mutZ = linesplit[4].strip()
-        mutZonlyFreq = float(linesplit[5])
-        only_xyFreq = float(linesplit[6])                
-        #z_score = linesplit[11] (reminder)
-        
-        if(not mutX in dict):
-            pos = re.search('\s*[a-z*-](\d+)[a-z*-]',  mutX,  re.I)
-            if(HasRegion):    
-                if(int(pos.group(1))>= int(region.group(1)) and int(pos.group(1)) <=int(region.group(2))):
-                    dict[mutX] = filterAll(mutX,  mutXonlyFreq,  only_xyFreq)
-            else:
-                dict[mutX] = filterAll(mutX,  mutXonlyFreq,  only_xyFreq)  
-              
-        if(not mutY in dict):
-            pos = re.search('\s*[a-z*-](\d+)[a-z*-]',  mutY,  re.I)
-            if(HasRegion):
-                if(int(pos.group(1)) >= int(region.group(1)) and int(pos.group(1)) <=int(region.group(2))):
-                    dict[mutY] = filterAll(mutY,  mutYonlyFreq,  only_xyFreq) 
-            else:                    
-                dict[mutY] = filterAll(mutY,  mutYonlyFreq,  only_xyFreq) 
-        
-    printHistogramFormat(identity, dict, outputFileName)
-
-
 
 #================================"makeLinks"================================#
 
 def makeLinks(openFile, identity,  outputFileName, region = 'N'):
     
-    outHandle = open(outputFileName+".links",  'w')
+    outHandle = open(SaveDir + '/' + outputFileName+".links",  'w')
     for line in openFile:
         
         linesplit = re.split('\|',  line)        
@@ -188,7 +98,7 @@ def makeLinks_T(openFile, identity,  outputFileName, region = 'N'):
 #================================"Main Function"================================#
 
 def main():    
-    global SaveDirectory    
+    global SaveDir    
     global HasRegion
     global P_Threshold
     global DoLogTen
@@ -197,7 +107,8 @@ def main():
     *****
         JaccardToCircos
             - Ver. 2
-            - Deals with jaccard easyoutput files and converts it to something circos can read.
+            - Deals with jaccard easyoutput files and converts it to a format 
+              that circos can read and make arcs.
             - 
     
     *****
@@ -210,10 +121,9 @@ def main():
     
     #optional
     parser.add_argument('-r',  '--region', help = 'The genomic region of interest. E.g. 500-970')
-    parser.add_argument('-d',  '--directory',  help = 'Directory path for saving location')
-    parser.add_argument('-hi', '--histogram',  help ='Directs tool to produce histogram format.',  action = 'store_true')
+    parser.add_argument('-d',  '--directory',  help = 'Directory path for saving location')    
     parser.add_argument('-lt',  '--logten',  help='Histogram values are log ten',  action = 'store_true')
-    parser.add_argument('-li', '--links',  help='Directs tool to produce histogram format.',  action = 'store_true')
+    parser.add_argument('-li', '--links',  help='Directs tool to produce links format.',  action = 'store_true')
     parser.add_argument('-p',  '--pValue_threshold',  help = 'P-value cut off. Default 0.05.',  type = float)
     parser.add_argument('-T',  '--triplet_file',  help = 'Input file is a jaccard triplet output',  action = 'store_true')
     
@@ -225,7 +135,7 @@ def main():
     
     if(args.directory):        
         if(os.path.isdir(args.directory)):            
-            SaveDirectory = re.sub('/+$', '',  args.directory)            
+            SaveDir = re.sub('/+$', '',  args.directory)            
         else:
             raise InputError(args.directory,  "Invalid directory: ") 
     if(args.pValue_threshold):
@@ -244,11 +154,7 @@ def main():
     if(os.path.isfile(args.file)):
         
         if(args.triplet_file):
-            if(args.histogram):
-                print "Processing histogram format for Triplet. *Note -> Currently does nothing"
-                print "Implementation not completed yet."
-                pass
-                
+            
             if(args.links):                
                 print "Processing link format for Triplet."
                 openFile = open(args.file)        
@@ -257,14 +163,8 @@ def main():
                 else:
                     makeLinks_T(openFile,  args.identity, args.output_file)
                 openFile.close()
-        else:    
-            if(args.histogram):
-                openFile = open(args.file)        
-                if(HasRegion):
-                    makeHistogram(openFile,  args.identity, args.output_file,  region)
-                else:
-                    makeHistogram(openFile,  args.identity,  args.output_file)
-                openFile.close()
+        else:   
+            
             
             if(args.links):
                 openFile = open(args.file)        

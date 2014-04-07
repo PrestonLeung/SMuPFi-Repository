@@ -11,7 +11,6 @@ import sys
 #========================"Global Variables and Data Structures"=======================#
 
 AvgReadHash = {}
-#OccurrenceHash = {}
 SaveDirectory = ''
 Shift = 0
 
@@ -65,18 +64,22 @@ def main():
     regionList = []
     
     program_function = """
-    *****This tool takes in EasyOutput files and summarises. Handles only EasyOutput files from SMuPFi.*****
+    *****
+         This tool takes in EasyOutput files from SMuPFi 
+         and converts it to a format that can be drawn as
+         histograms around a Circos plot.
+    *****
     """
     parser = argparse.ArgumentParser()
     #required arguments
     parser.add_argument('-f', '--folder', help = 'Folder of EasyOutput files.',  required = True)
-    parser.add_argument('-r',  '--region', help = 'The genomic region of interest. E.g. 500-970',  required = True)
-    parser.add_argument('-i', '--identity',  help = 'Identity relevent to circos identiy for genome',  required = True)
+    parser.add_argument('-r',  '--region', help = 'The genomic region of interest. E.g. 500-970.',  required = True)
+    parser.add_argument('-i', '--identity',  help = 'Identity relevent to circos identiy for genome.',  required = True)
     
     
     #optional
-    parser.add_argument('-d',  '--directory',  help = 'Directory path for saving location')
-    parser.add_argument('-sh', '--shift', help='Deduct the position by number', type = int)
+    parser.add_argument('-d',  '--directory',  help = 'Directory path for saving location.')
+    parser.add_argument('-sh', '--shift', help='Deduct the position by number SHIFT.', type = int)
     if len(sys.argv) <= 0:
             print(program_function)
             parser.print_help()

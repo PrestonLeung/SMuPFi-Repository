@@ -29,10 +29,6 @@ GlobalRun = 'N'
 IgnoreGap = 'N'
 #Sum of all Avg Reads
 TotalAvgRead= 0.0
-#Clustalw directory. Change this path if this is not the place where your clustalw.exe is located. (If you don't have it, install first)
-ClustalDir = "/usr/bin/"
-#
-NonConserve = 'N'
 #========================"Self defined Errors and Exceptions"=======================#
 
 class Error(Exception):
@@ -86,12 +82,8 @@ def initialSearch(seqRef, seqRec, lowerBound, upperBound, refLowBound,  refHighB
     try:        
         if(SaveDirectory):
             output = open(SaveDirectory + '/'+ fileName + '.txt',  'w')
-            if(NonConserve == 'Y'):
-                tempOutput = open(SaveDirectory + '/TempFile',  'w')
         else:    
             output = open(fileName+'.txt',  'w')
-            if(NonConserve == 'Y'):
-                tempOutput = open('TempFile',  'w')
         try:
             output.write("Looking at a maximum of {} nucleotides. ".format(maxScope))
             if(GlobalRun == "Y"):
@@ -104,27 +96,17 @@ def initialSearch(seqRef, seqRec, lowerBound, upperBound, refLowBound,  refHighB
     
             for seqReference in seqRef:
                 pre_AARef = seqReference.seq[startingCodon-1 : len(seqReference)].translate()                
-                my_AARef = pre_AARef[(startingAA - 1) : frameShift(refHighBound,  0, startingCodon)]                
+                my_AARef = pre_AARef[(startingAA - 1) : frameShift(refHighBound,  0, startingCodon)]
+
+                output.write("%s" %my_AARef + '\n')                
                 
-                #my_AARef = seqReference.seq[refLowBound-1 : refHighBound].translate()
-                output.write("%s" %my_AARef + '\n')
-                if(NonConserve == 'Y'):
-                    tempOutput.write(">{}\n".format('Reference'))
-                    tempOutput.write("%s" %my_AARef + '\n')
-                
-                for singleRecord in seqRec:
-                    #print singleRecord
-                    my_posString = ''                      
-                    #codonList = re.findall('.?.?.?',  str(singleRecord.seq))
-                    #codonList.remove('')                    
+                for singleRecord in seqRec:                    
+                    my_posString = ''
                     aaSeqHash = {}
                     refMutHash = {}
-                    aaMutPos = set()
+                    aaMutPos = set()                    
                     
-                    #my_AATranslation = codonProcess(codonList,  startingCodon,  lowerBound)
-                    my_AATranslation = codonProcess(str(singleRecord.seq),  lowerBound, startingCodon)
-                    #print "my_AATranslation: ", my_AATranslation
-                    #my_RefMutString = ''
+                    my_AATranslation = codonProcess(str(singleRecord.seq),  lowerBound, startingCodon)                    
                     
                     if(GlobalRun == 'Y'):
                         stringMatch = re.search(r'(.*)_(.*)',  singleRecord.description,  re.M)                        
@@ -154,8 +136,6 @@ def initialSearch(seqRef, seqRec, lowerBound, upperBound, refLowBound,  refHighB
                         else:                            
                             my_posString += '.'
                     
-
-
                     if(AAFreqTable.has_key(my_AATranslation)):                            
                         AAFreqTable[my_AATranslation] += float(stringMatch.group(2))
                         if(GlobalRun == 'Y'):
@@ -164,38 +144,27 @@ def initialSearch(seqRef, seqRec, lowerBound, upperBound, refLowBound,  refHighB
                             AAHapTable[my_AATranslation] += (', '+ re.sub('\|posterior.*', '', singleRecord.id))                        
                     else:    
                         AAFreqTable[my_AATranslation] = float(stringMatch.group(2))                        
-                        #AAHapTable[my_AATranslation] = re.sub('\|posterior.*', '', singleRecord.id)
+                        
                         if(GlobalRun == 'Y'):
                             AAHapTable[my_AATranslation] = re.sub('_\d+\.?\d*.*$', '', singleRecord.id)
                         else:
                             AAHapTable[my_AATranslation] = re.sub('\|posterior.*', '', singleRecord.id)
                         AASimplified[my_AATranslation] = my_posString
-#                        print "ref length: {}".format(len(my_AARef))
-#                        print "my_posString Length: {}".format(len(my_posString))
-#                        print
+
                     diffHash[singleRecord.description] = aaSeqHash
                     beforeMut[singleRecord.description] = refMutHash
                     
                     if(not args.mutationcombination):                        
-                        if(len(diffHash[singleRecord.description]) > MCombinationMax):
+                        if(len(diffHash[singleRecord.description]) > Max):
                             MCombinationMax = len(diffHash[singleRecord.description])
                     TotalAvgRead= TotalAvgRead + float(stringMatch.group(2))
                     
-                    if(NonConserve == 'Y'):
-                        #deletions cleaned in nucleotide sequence
-                        #my_AATranslation2 = Seq(re.sub('-', '',  str(singleRecord.seq))).translate(to_stop=True)
-                        my_AATranslation2 = codonProcess(re.sub('-', '',  str(singleRecord.seq)),  lowerBound, startingCodon)
-                        unalignedAA[re.sub(' ', '-', str(singleRecord.description))] = str(my_AATranslation2)                
                 
                 for keys in sorted(AAFreqTable,  key = len,  reverse = True):                         
                         output.write(str(AASimplified[keys]).ljust(dynamicSpace + 10))
                         output.write(str(math.ceil(AAFreqTable[keys] / TotalAvgRead* 1000.0) / 1000.0).ljust(10))                        
                         output.write(str(AAHapTable[keys]) + '\n')
-                if(NonConserve == 'Y'):
-                    for keys in sorted(unalignedAA.iterkeys()):                    
-                        tempOutput.write('>'+ re.sub('\|posterior=\d+\.*\d*-ave_reads=', '_', keys) + '\n') 
-                        tempOutput.write(str(unalignedAA[keys]) + '\n')
-                    tempOutput.close()
+
 
         finally:
             output.write('\n\n')            
@@ -326,8 +295,7 @@ def secondSearch(diffHash,  fileName, refHash):
     #Printing the common mutations we've just found
     sortedKeyList2 = sorted(allNames.iterkeys())    
     sortedKeyList3 = sorted(uniqueFrequency.iterkeys())
-#    currentGap = constructGap(sortedKeyList2)    
-#    printGap = (currentGap + 1) 
+
     
     if(len(sortedKeyList2) > 0 or len(sortedKeyList3) > 0):
         try:
@@ -338,9 +306,7 @@ def secondSearch(diffHash,  fileName, refHash):
             try:                
                 output.write("Summary of common mutations with length from "+str(MCombinationMin)+ '-'+ str(MCombinationMax)+ ":\n\n")
                 output.write("Position(s)\tPattern\tShared Occurrence\n\n")
-                #output.write("Pattern\t")
-                #output.write("Shared Occurrence\n\n")
-                #output.write("Occurring in".rjust(printGap + len("Occurring in")) + "\n\n")
+
             
                 
                 if(len(sortedKeyList2) > 0):
@@ -400,7 +366,7 @@ def secondSearch(diffHash,  fileName, refHash):
     del sortedKeyList3[:]
     allNames = allAvgSum = uniqueName = uniqueFrequency = uniquePattern = None
     sortedKeyList2 = sortedKeyList3 = None
-    #gc.collect()
+
 
 #========================"constructGap"========================#
 #Helper function to create the right spacing for printing using sortedKeyList2.
@@ -456,97 +422,6 @@ def codonProcess(seq,  position,  startCodon):
             else:
                 aminoAcid += str(Seq(triplet).translate()) 
     return aminoAcid        
-
-#========================"alignProcess=========================#
-#Currently not used
-
-def alignProcess(alnRecord,  startingAA,  fileName):
-    alnHash = {}
-    alnHashTag = {}
-    alnHashFreq = {}
-    alnHashRef = {}
-    dynamicSpace = 0
-    refSequence = ''
-    global MCombinationMax
-    
-    for item in alnRecord:
-        if(item.id != 'Reference'):
-            continue
-        refSequence = item.seq        
-    
-    for item in alnRecord:
-        alnSeqHash = {}
-        alnRef = {}
-        my_posString = ''
-        
-        if(item.id == 'Reference'):
-            continue
-        if(len(item.seq) > dynamicSpace):
-            dynamicSpace = len(item.seq)
-        
-        for i in range (0,  len(item.seq)): 
-            if(item.seq[i] != refSequence[i]):
-                my_posString += item.seq[i]
-                if(item.seq[i] != '-'):
-                    alnSeqHash[i + startingAA] =  item.seq[i]
-                    alnRef[i + startingAA] = refSequence[i]
-            else:
-                my_posString += '.'
-        alnHash[item.id] = alnSeqHash
-        alnHashRef[item.id] = alnRef
-        if(len(alnSeqHash) > MCombinationMax):
-            MCombinationMax = len(alnSeqHash)
-        
-        if(GlobalRun == 'Y'):
-            if(alnHashTag.has_key(my_posString)):
-                alnHashTag[my_posString] += ', '+ re.sub('_\d+\.\d+$', '', str(item.id))
-                alnHashFreq[my_posString] += float( re.sub('^HAP\d+_', '', str(item.id)))
-            else:
-                alnHashTag[my_posString] = re.sub('_\d+\.\d+$', '', str(item.id))
-                alnHashFreq[my_posString] = float( re.sub('^HAP\d+_', '', str(item.id)))
-        else:
-            if(alnHashTag.has_key(my_posString)):
-                alnHashTag[my_posString] += ', '+ re.sub('_\d+\.?\d*$','', str(item.id))
-                alnHashFreq[my_posString] += float(re.sub('^hap_\d+_', '', str(item.id)))
-            else:
-                alnHashTag[my_posString] = re.sub('_\d+\.?\d*$','', str(item.id))
-                alnHashFreq[my_posString] = float(re.sub('^hap_\d+_', '', str(item.id)))
-    
-    if(SaveDirectory):
-        output = open(SaveDirectory + '/'+ fileName + '_NonConservative.txt',  'w')    
-    else:    
-        output = open(fileName + '_NonConservative.txt',  'w')
-    
-    output.write(str(refSequence) + '\n')    
-    for keys in sorted(alnHashTag.iterkeys()):
-        output.write(keys.ljust(dynamicSpace + 10))
-        output.write(str(math.ceil((alnHashFreq[keys]/TotalAvgRead)*1000)/1000).ljust(10))
-        output.write(alnHashTag[keys] + '\n')    
-    output.close ()  
-    ncFileName = fileName + '_NonConservative'
-    return alnHash,  ncFileName,  alnHashRef
-    
-#========================"doAlignment"=========================#
-#Calls clustalw to do a protein sequence alignment given file to open
-#Currently not used
-
-def doAlignment(tempFileName):
-    
-    assert os.path.isfile(ClustalDir + '/clustalw'), """
-        Clustal W is missing in current directory. If clustalw is installed, change default path (in code).
-        If not, then install first, and change default path (in code).
-    """ 
-    if(SaveDirectory):
-        if(not os.path.getsize(SaveDirectory + '/' + tempFileName) == 0 and getFileLength(SaveDirectory + '/'+ tempFileName) > 2):
-            cline = ClustalwCommandline("clustalw",  infile = SaveDirectory + '/' + tempFileName)                        
-            stdout,  stderr = cline() 
-            align = AlignIO.read(SaveDirectory + "/"+ tempFileName + ".aln",  "clustal")         
-    else:    
-        if(not os.path.getsize(tempFileName) == 0 and getFileLength(tempFileName) > 2 ):
-            cline = ClustalwCommandline("clustalw",  infile =tempFileName)                        
-            stdout,  stderr = cline()
-            align = AlignIO.read("/"+ tempFileName +".aln",  "clustal")                
-    return align
 
 #========================"frameShift=========================#
 #This subfunction computes nucleotide positions into respective amino acid position.
@@ -761,13 +636,7 @@ def processDir (pathToFasta, pathToReference, scope,  startingCodon):
            
             fileName, cHash,  ref = initialSearch(seqRef,  seqRec,  int(recLow),  int(recHigh),  int(refLow),  int(refHigh),  int(maxLength),  startingCodon)
             
-            secondSearch(cHash,  fileName,  ref) 
-            if(NonConserve == 'Y'):
-                alignedRecord = doAlignment('TempFile')                
-                startingAA = frameShift(int(refLow),  0,  startingCodon)
-                ncHash,  ncFileName,  ref = alignProcess(alignedRecord, startingAA,  fileName)
-                
-                #secondSearch(ncHash,  ncFileName,  ref)     
+            secondSearch(cHash,  fileName,  ref)
                 
     elif(os.path.isfile(pathToFasta)):
         seqRec = tryRecFile(pathToFasta)
@@ -777,25 +646,19 @@ def processDir (pathToFasta, pathToReference, scope,  startingCodon):
         pathFasta,  fastaFile =  os.path.split(args.fastafilename)
         
         if(GlobalRun == 'Y'):
-                if(not re.search('.popl$',  fastaFile)):
-                    raise InputError(args.fastafilename,  "File is not in correct .popl format. Given argument: ")    
-                    sys.exit()                
+#                if(not re.search('.popl$',  fastaFile)):
+#                    raise InputError(args.fastafilename,  "File is not in correct .popl format. Given argument: ")    
+#                    sys.exit()                
                 recLength = getGlobalLength(pathToFasta)                    
                 refLength = int(refScope.group(2)) - int(refScope.group(1)) + 1
                 recLow, refLow = int(refScope.group(1)),  int(refScope.group(1))
                 refHigh = min(recLength,  refLength) + refLow - 1
                 recHigh = min(recLength,  refLength) + recLow - 1
-                maxLength = min(recLength,  refLength)
-                
+                maxLength = min(recLength,  refLength)                
 
                 fileName, cHash,  ref = initialSearch(seqRef,  seqRec,  recLow, recHigh,  refLow,  refHigh,  maxLength,  startingCodon)
                 
-                secondSearch(cHash,  fileName,  ref) 
-                if(NonConserve == 'Y'):
-                    startingAA = frameShift(int(refLow),  0, startingCodon)
-                    alignedRecord = doAlignment('TempFile')                
-                    ncHash,  ncFileName, ref = alignProcess(alignedRecord, startingAA,  fileName)                    
-                    #secondSearch(ncHash,  ncFileName, ref) 
+                secondSearch(cHash,  fileName,  ref)                
         else:    
             searchLimit = re.search('(\d+)-(\d+)\.reads-support\.fas$',  fastaFile)               
         
@@ -806,12 +669,7 @@ def processDir (pathToFasta, pathToReference, scope,  startingCodon):
             fileName,  cHash,  ref = initialSearch(seqRef,  seqRec,  int(recLow),  int(recHigh),  int(refLow),  int(refHigh),  int(maxLength),  startingCodon)
             
             secondSearch(cHash,  fileName, ref) 
-            
-            if(NonConserve == 'Y'):
-                alignedRecord = doAlignment('TempFile') 
-                startingAA = frameShift(int(refLow),  0,  startingCodon)    
-                ncHash,  ncFileName,  ref= alignProcess(alignedRecord, startingAA,  fileName)                
-                #secondSearch(ncHash,  ncFileName, ref) 
+                        
     else:
         raise InputError(args.fastafilename,  "Is not a directory or file. Given argument: ")
         sys.exit()
@@ -828,7 +686,7 @@ if __name__ == '__main__':
     *****
     ~a-SMuPFi (amino acid - Shared Mutation Pattern Finder)~
 
- 	A tool that takes in ShoRAH sequences and searches for shared mutations!	 
+ 	A tool that takes in sequences and searches for shared mutations!	 
 
 	Version 0.869AA
 
@@ -852,15 +710,11 @@ if __name__ == '__main__':
                                                     for example, 5-5 to get min of 5 and max of 5.''')
     parser.add_argument('-t', '--threshold', help='Minimum posterior requirement. Default is 0.85.',  type=float)
     parser.add_argument('-gf', '--globalfrequency',  
-                                        help="Threshold value for frequency of occurence of haplotypes in global files.",  type = float)
+                                        help="Threshold value for frequency of occurrence of haplotypes in global files.",  type = float)
     parser.add_argument('-d', '--directory',  help='Directory path to save the files. If none specified, saves in local directory.')
     parser.add_argument('-e','--easyoutput',  help='Produces a simple output file. Made for easy read-ins for other programs.' ,  action = 'store_true')
-    parser.add_argument('-g','--globalseq',  help='Parsing in global files (.popl files).',  action = 'store_true')
-#    parser.add_argument('-i', '--ignoregap',  help='Ignores gaps all in sequences during comparison. Enter Y or Yes to trigger.')
-#    parser.add_argument('-nc',  '--non_conservative',  
-#                                        help = ''' Activate non-conservative translation. Indels ('-') in the nucleotide sequence are taken into
-#                                                      account and the nucleotide following immediately after the deletion will be included
-#                                                      in the codon for translation. Enter 'Y' to trigger this mode.''')
+    parser.add_argument('-g','--globalseq',  help='Parsing in global files (.popl files from ShoRAH output) or generic fasta sequences.',  action = 'store_true')
+
     if len(sys.argv) <= 3:
             print(program_function)
             parser.print_help()
@@ -904,17 +758,6 @@ if __name__ == '__main__':
         #print GlobalRun
     if(args.globalfrequency):
         GThreshold = float(args.globalfrequency)
-#    if(args.ignoregap):
-#        if(re.search('^y$|^yes$', args.ignoregap , re.I)):
-#            IgnoreGap = 'Y'
-#        else:
-#            raise InputError(args.ignoregap,  "Invalid argument: ")    
-#    if(args.non_conservative):
-#        if(re.search('^y$|^yes$', args.non_conservative , re.I)):
-#            NonConserve = 'Y'
-#            print "Currently disabled due to bugs."
-#            sys.exit(0)
-#        else:
-#            raise InputError(args.easyoutput,  "Invalid argument: ")
+
     processDir(args.fastafilename,  args.referencefilename,  args.scope,  args.starting_codon)    
 
