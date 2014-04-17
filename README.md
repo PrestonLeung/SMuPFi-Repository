@@ -113,6 +113,14 @@ qualfa2fq.pl is a merger tool that intergrates a .fasta / .fna file and a .qual 
 qualfa2fq_bt.pl is a version doing the same process, but made for aligners (e.g. bowtie2) 
 that dislike the 60 character limit in the .fastq /.fq files.
 
+Script taken from BWA
+
+Citation:
+
+Li H. and Durbin R. (2009) Fast and accurate short read alignment with Burrows-Wheeler Transform. Bioinformatics, 25:1754-60. [PMID: 19451168] 
+Li H. and Durbin R. (2010) Fast and accurate long-read alignment with Burrows-Wheeler Transform. Bioinformatics, Epub. [PMID: 20080505] 
+Weblink: http://sourceforge.net/projects/bio-bwa/files/
+
 ================================sequenceExpand.py================================
 
 Uses fasta sequences with frequency information in the fasta tag as input and expands
