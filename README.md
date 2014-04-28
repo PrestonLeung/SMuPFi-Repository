@@ -267,6 +267,6 @@ Sample viral sequences reconstructed through ShoRAH and SNP data generated from 
 
 
 ###Authors
-:feelsgood: Preston Leung
+:man_with_gua_pi_mao: Preston Leung (preston@student.unsw.edu.au)
 
-:man: Fabio Luciani  
+:man: Fabio Luciani (luciani@unsw.edu.au) 
