@@ -19,12 +19,12 @@ For the pipeline to work, these dependencies are required beforehand:
 
 ##Tools
 
-######================================a_smupfi.py================================
+######==a_smupfi.py==
 
 a-smupfi.py is the Shared Mutation Pattern Finder tool that takes in viral sequences in fasta format. It iterates through sequences and identifies all changes against the reference sequence and searches for mutations that are shared among two or more unique
 sequences.
 
-***Usage and Options:***
+**Usage and Options:**
 
 There are many options implemented in the tool, and these can be viewed by running:
 
@@ -65,7 +65,7 @@ a-smupfi provides four files for output (XXXX-YYYY is the region specified by -s
 
 4. XXXX-YYYY_EasyOutputUnique.txt => a file made for easy parsing, but selects all mutations on any sequence
 
-######================================choplqb.py================================
+###### ==choplqb.py==
 
 choplqb.py is a simple cleaning tool that uses average phred-score over a user given window length to proccess raw fasta sequences. The tool trims the reads when the average phred-score falls below the user given threshold It requires two files, a .fasta or .fna file and a .qual file. This is usually used with Next Generation Sequencing (NGS) data where the accuracy and trusthworthiness of individual reads may decrease at the near the end of the read.
 
@@ -74,7 +74,7 @@ Usage:
 	choplqb.py [-h] -f FASTAFILENAME -q QUALITYFILENAME -w WINDOW_SIZE 
 	            -t QUALITY_THRESHOLD [-d] [-D OUTPUT_DIR]
 
-######================================circosConverter.py================================
+######==circosConverter.py==
 
 circosConverter.py is a format converter tool that simply changes easyoutput files from a-smupfy.py to a format that Circos can understand. This tool is used for creating the histogram around the circos plots.
 
@@ -84,7 +84,7 @@ Usage:
 	
 Where `X-Y` is the region with start postion `X` and end position `Y`.
 
-######================================indelRemover.py================================
+######==indelRemover.py==
 
 A tool to remove indels from fasta sequences and replace it with reference sequence characters and merges fasta sequences that end up being identical.
 
@@ -97,7 +97,7 @@ Usage:
 	indelremover.py [-h] -f FASTAFILENAME -r REFERENCEFILENAME -s SCOPE 
 			        [-fr FREQ_INDEX] [-o OUTPUT_FILE] [-a]
 
-######================================jaccardToCircos.py================================
+######==jaccardToCircos.py==
 
 jaccardToCircos.py is a simple format converter tool that deals with jaccard easyoutput files and converts it to a format, which Circos can read and make arcs.
 
@@ -107,7 +107,7 @@ Usage:
                        [-d DIRECTORY] [-lt] [-li] [-p PVALUE_THRESHOLD]
                        [-T]
 
-######================================javssim.py================================
+######==javssim.py==
 
 javssim.py (Jaccard Value Statistical Simulator) is a simulator utilising easyOutputShared files from a-smupfi.py to conduct statistical test on paired mutation and returns a ranked list of mutation that identifies which pairs are occurring more than random and which pairs are occurring less than random.
 
@@ -117,7 +117,7 @@ Usage:
 
 where providing the option `-e` will tell javssim.py to output an easy to parse file similar to the easyoutput files created by a_smupfy.py. All the data are delimited by `|` character.
 
-######================================omes.py================================
+######==omes.py==
 
 omes.py is an algorithm that uses the observed minus expected squared formula to calculate which pair of of positions are co-varying. It outputs a list of pairs which have been calculated to hold a score greater than 0.
 
@@ -125,7 +125,7 @@ Usage:
 
 	omes.py [-h] -f FILE [-st START_POS]
 
-######================================qualfa2fq.pl/qualfa2fq_bt.pl================================
+######==qualfa2fq.pl/qualfa2fq_bt.pl==
 
 qualfa2fq.pl is a merger tool that intergrates a .fasta / .fna file and a .qual file into a .fastq/.fq file.
 
@@ -143,7 +143,7 @@ Home Page: [Burrows-Wheeler Aligner](http://bio-bwa.sourceforge.net/)
 
 **Note:**  Please download qualfa2fq.pl from above web link. You can find qualfa2fq.pl inside the compressed file once extraction is done. qualfa2fq_bt.pl has been very slightly modified by me (commented out some lines) and made available here.
 
-######================================sequenceExpand.py================================
+######==sequenceExpand.py==
 
 Uses fasta sequences with frequency information in the fasta tag as input and expands according to a base number. Using ShoRAH output as an example:
 
@@ -156,7 +156,7 @@ Usage:
 
 If base is given as -b 100, then sequence 1 will be expanded to 35 reads. If -b 1000, then sequence 1 will be expanded as 354.
 
-######================================sif_converter.py================================
+######==sif_converter.py==
 
 Takes in outputs from omes.py and converts the user defined pairs into .sif format which can be taken in by Cytoscape to draw networks. The tool has the option -t which allows users to define their own threshold for selecting data. 
 
@@ -165,7 +165,7 @@ Usage:
 	sif_converter.py [-h] -f FILE -o OUTPUT_NAME -t THRESHOLD
                      [-d DIRECTORY]
 
-######================================snpExtractor.py================================
+######==snpExtractor.py==
 This script takes SNPS recorded in an output file from the software LoFreq. It substitute the SNP into a given reference sequence and performs translations to display amino acid mutations.
 
 Download: [LoFreq Tool](http://sourceforge.net/projects/lofreq/)
@@ -193,7 +193,7 @@ Usage:
                     [-o OUTPUT_FILE] [-i] [-rp] [-lt] [-fup FILTER] [-sf] [-is]
 
 
-######================================snpExtractConverter.py================================
+######==snpExtractConverter.py==
 
 snpExtractConverter.py changes the format of the output of the snpExtractor.py into histogram format that can be understood by Circos.
 
@@ -202,7 +202,7 @@ Usage:
 	snpExtractConverter.py [-h] -f FILE -r REGION -i IDENTITY [-d DIRECTORY] 
 	                       [-sh SHIFT]
 
-######================================uniqvariant.py================================
+######==uniqvariant.py==
 
 uniqvariant.py takes in fasta files that have (potentially) repeated sequences and merges them into a unique sequence and provides that sequence with a frequency of occurrence number. For example with 3 sequences:
 
@@ -243,7 +243,7 @@ Usage:
 
 ##Data Files
 
-######================================Circos TEST DATA================================ 
+######==Circos TEST DATA== 
 
 To construct Circos plots, you need Circos installed.
 
@@ -261,12 +261,12 @@ In `config_240_t4.conf`, you will need to provide the correct path to where it c
 Other files within the `Ch240_Time4-CircosTESTDATA` are cosmetic parameters that can be altered to personalise how the Circos plot is drawn. See [Circos Tutorials](http://circos.ca/tutorials/lessons/) to see how to edit these parameters.
 
 
-######================================TEST DATA================================
+######==TEST DATA==
 
-Sample viral sequences reconstructed through ShoRAH and SNP data generated from Lofreq has been provided to act as a sample run for the pipeline. They are located in the folder `TESTDATA`, with subfolders `LoFreq_Output` and 'ShoRAH_Viral_Sequences`. 
-
-
+Sample viral sequences reconstructed through ShoRAH and SNP data generated from Lofreq has been provided to act as a sample run for the pipeline. They are located in the folder `TESTDATA`, with subfolders `LoFreq_Output` and `ShoRAH_Viral_Sequences`. 
 
 
+###Authors
+:feelsgood: Preston Leung
 
-~PresDawgz :open_mouth:
+:man: Fabio Luciani  
