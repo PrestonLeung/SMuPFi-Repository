@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 
 # Observed Minus Expected Square tool (OMES)
 # ver. 001
@@ -91,7 +91,7 @@ def omes(fastaHash,  length, start_pos):
             #mInfo = math.fsum(m_infoList)
             if(cov > 0):
  #               print (i + start_pos), "\t", (j + start_pos), "\t", cov,  "\t", math.fsum(omesList) / len(omesList)
-                print (i + start_pos), "\t", (j + start_pos), "\t", cov,  "\t"#, mInfo
+                print (i + start_pos), "\t", (j + start_pos), "\t", cov #,  "\t"#, mInfo
     
 
 #=========================="singleEntropy"==========================#

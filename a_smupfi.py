@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/local/bin/python
 #Version 0.869AA -
 
 # This script version deals with ShoRAH6. 

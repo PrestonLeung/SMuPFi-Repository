@@ -1,4 +1,4 @@
-# !/usr/bin/python
+#!/usr/local/bin/python
 #
 #JaVSSimDupplet:
 #   Version 0.06
@@ -365,7 +365,7 @@ if __name__ == '__main__':
             raise InputError(args.destination, "Invalid saving destination: ")
         else:
             SavePath = args.destination     
-    FileName = re.sub('\..*$', '', args.name)    j
+    FileName = re.sub('\..*$', '', args.name)
     if(args.easyoutput):        
         MakeEasy = True
     

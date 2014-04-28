@@ -78,7 +78,7 @@ def main():
     
     
     #optional
-    parser.add_argument('-d',  '--directory',  help = 'Directory path for saving location.')
+    #parser.add_argument('-d',  '--directory',  help = 'Directory path for saving location.')
     parser.add_argument('-sh', '--shift', help='Deduct the position by number SHIFT.', type = int)
     if len(sys.argv) <= 0:
             print(program_function)
@@ -86,11 +86,11 @@ def main():
             sys.exit()
     args=parser.parse_args()
     
-    if(args.directory):        
-        if(os.path.isdir(args.directory)):            
-            SaveDirectory = re.sub('/+$', '',  args.directory)            
-        else:
-            raise InputError(args.directory,  "Invalid directory: ") 
+    #if(args.directory):        
+    #    if(os.path.isdir(args.directory)):            
+    #        SaveDirectory = re.sub('/+$', '',  args.directory)            
+    #    else:
+    #        raise InputError(args.directory,  "Invalid directory: ") 
     if(args.region):
         regionList = re.split('-',  args.region)
     if(args.shift):

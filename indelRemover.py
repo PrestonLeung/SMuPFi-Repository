@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/local/bin/python
 #Ver. 0.02
 #Pre.L
 
@@ -403,7 +403,7 @@ if __name__ == '__main__':
     #Optional Arguments
     parser.add_argument('-fr',  '--freq_index',  help='position of frequency in the tag, seperated by "_".',  type = int)    
     parser.add_argument('-o', '--output-file', help='output filename of result.')
-    parser.add_argument('-a', '--replace_all', help='any indel '-' characters are replaced with reference when found', action='store_true')
+    parser.add_argument('-a', '--replace_all', help='any indel "-" characters are replaced with reference when found', action='store_true')
 
     if len(sys.argv) < 2:
             print(program_function)

@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/local/bin/python
 #Ver. 0.01
 #Pre.L
 

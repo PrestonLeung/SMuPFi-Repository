@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 
 #Version 0.001-
 
@@ -15,7 +15,7 @@ AvgReadHash = {}
 SaveDirectory = ''
 Shift = 0
 
-String = '32|5|G G C|G|A G C|S|0.034346829'
+#String = '32|5|G G C|G|A G C|S|0.034346829'
 
 #========================"Self defined Errors and Exceptions"=======================#
 

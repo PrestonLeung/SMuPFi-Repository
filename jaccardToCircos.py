@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/local/bin/python
 # Ver. 0.002
 #renamed from jaccardToCircos2 -> jaccardToCircos
 
