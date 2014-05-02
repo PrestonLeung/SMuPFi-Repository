@@ -11,7 +11,7 @@ import sys
 #========================"Global Variables and Data Structures"=======================#
 
 AvgReadHash = {}
-SaveDirectory = ''
+SaveDirectory = '.'
 Shift = 0
 
 #========================"Self defined Errors and Exceptions"=======================#
@@ -39,7 +39,7 @@ class InputError (Error):
 def printLinks(identity,  list, start,  end,  fileName):    
 
     spaceSwitch = 1
-    writeFile = open(fileName+".links",  'w')
+    writeFile = open(SaveDirectory + '/' + fileName+".links",  'w')
     for item in list:
         for x in range (0, len(item)):
             y = x + 1
@@ -64,7 +64,7 @@ def printLinks(identity,  list, start,  end,  fileName):
 #Prints in histogram Circos format.
 
 def printHistogram(identity,  hashTable, start,  end,  fileName):    
-    writeFile = open(fileName+".histogram",  "w")
+    writeFile = open(SaveDirectory + '/' + fileName+".histogram",  "w")
     for keys in hashTable.iterkeys():
         if(int(keys) >= start and int(keys) <= end):
             #print identity, int(keys)-Shift,  keys,  hashTable[keys]
