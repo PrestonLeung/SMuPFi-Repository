@@ -76,7 +76,7 @@ Usage:
 
 ######==circosConverter.py==
 
-circosConverter.py is a format converter tool that simply changes easyoutput files from a-smupfy.py to a format that Circos can understand. This tool is used for creating the histogram around the circos plots.
+circosConverter.py is a format converter tool that simply changes easyoutput files from a-smupfy.py to a format that Circos can understand. This tool is used for creating the histogram `-hi`as well as links `li` around the circos plots.
 
 Usage:
 	
@@ -84,7 +84,7 @@ Usage:
                        [-d DIRECTORY] [-sh SHIFT] [-shared] [-li] [-hi]
                        [-lt]
 	
-Where `X-Y` is the region with start postion `X` and end position `Y`.
+
 
 ######==indelRemover.py==
 
