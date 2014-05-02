@@ -93,7 +93,7 @@ def initialSearch(seqRef, seqRec, lowerBound, upperBound, refLowBound,  refHighB
             output.write("at nucleotide reference regions {} to {}.\n".format(refLowBound,  refHighBound))            
             output.write("Amino acid region {} to {}.\n\n".format(startingAA,  frameShift(refHighBound,  0, startingCodon)))
             output.write("Reference:\n")
-    
+            
             for seqReference in seqRef:
                 pre_AARef = seqReference.seq[startingCodon-1 : len(seqReference)].translate()                
                 my_AARef = pre_AARef[(startingAA - 1) : frameShift(refHighBound,  0, startingCodon)]
@@ -347,7 +347,7 @@ def secondSearch(diffHash,  fileName, refHash):
             else:
                 output = open(fileName + '.txt',  'a') 
             try:
-                output.write("Common differences not found378.")
+                output.write("Common differences not found 378.")
             finally:
                 output.close()
                 print "File {}.txt done".format(fileName)
@@ -526,7 +526,7 @@ def printEasyOutputShared(nameshash,  counthash,  keyList,  fileName,  totalHapC
             else:
                 eOutput = open(fileName + '_EasyOutputShared.txt',  'w')    
             try:                    
-                eOutput.write("Common differences not found646.")
+                eOutput.write("Common differences not found 646.")
             finally:
                 eOutput.close()
                 print "File "+ fileName + "_EasyOutputShared.txt done."

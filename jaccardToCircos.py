@@ -5,7 +5,7 @@
 import re,  os,  math,  argparse
 import sys
 
-SaveDir = ''
+SaveDir = '.'
 #Z_Threshold = 2.325
 P_Threshold = 0.05
 HasRegion = 0
@@ -31,13 +31,14 @@ def filterAll(mutX,  mutXFreq,  xy_only_freq):
 #================================"makeLinks"================================#
 
 def makeLinks(openFile, identity,  outputFileName, region = 'N'):
-    
+        
     outHandle = open(SaveDir + '/' + outputFileName+".links",  'w')
     for line in openFile:
-        
+
         linesplit = re.split('\|',  line)        
-        
+
         if(float(linesplit[8]) > P_Threshold):
+            
             continue
                 
         posX = re.search('\s*[a-z*-](\d+)[a-z*-]',  linesplit[0].strip(),  re.I)
@@ -55,13 +56,13 @@ def makeLinks(openFile, identity,  outputFileName, region = 'N'):
             outHandle.write( posY.group(1)+" "+ posY.group(1)+"\n")
     
     outHandle.close()        
-    print "Links Done."    
+    print "Links Done. [D]"    
     
 #================================"makeLinks_T"================================#
 
 def makeLinks_T(openFile, identity,  outputFileName, region = 'N'):
     
-    outHandle = open(outputFileName+".links",  'w')
+    outHandle = open(SaveDir + '/' + outputFileName+".links",  'w')
     for line in openFile:
         
         linesplit = re.split('\|',  line)        
@@ -93,7 +94,7 @@ def makeLinks_T(openFile, identity,  outputFileName, region = 'N'):
                 outHandle.write(posZ.group(1)+" "+ posZ.group(1)+"\n\n")
     
     outHandle.close()        
-    print "Links Done."    
+    print "Links Done. [T]"    
 
 #================================"Main Function"================================#
 
