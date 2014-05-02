@@ -80,7 +80,9 @@ circosConverter.py is a format converter tool that simply changes easyoutput fil
 
 Usage:
 	
-	circosConverter.py [-h] -f FOLDER -r REGION -i IDENTITY [-sh SHIFT]
+	circosConverter.py [-h] -f FOLDER -r REGION -i IDENTITY -n OUTPUT_NAME
+                       [-d DIRECTORY] [-sh SHIFT] [-shared] [-li] [-hi]
+                       [-lt]
 	
 Where `X-Y` is the region with start postion `X` and end position `Y`.
 
