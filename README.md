@@ -268,10 +268,12 @@ Other files within the `Ch240_Time4-CircosTESTDATA` are cosmetic parameters that
 Sample viral sequences reconstructed through ShoRAH and SNP data generated from Lofreq has been provided to act as a sample run for the pipeline. They are located in the folder `TESTDATA`, with subfolders `LoFreq_Output` and `ShoRAH_Viral_Sequences`. 
 
 `300240_nextgene_INDELSremoved.fas` is the consensus file use for the run.
-The file inside `LoFreq_Output` can be used for snp calling using `snpExtractor.py`.
+
+The file inside `LoFreq_Output` is the input file for `snpExtractor.py`.
+
 The file inside `ShoRAH_Viral_Seqeunces` is ready for `a-smupfi.py`.
 
-For details on how to adjust parameters, please see Material and Methods.
+For details on how to adjust parameters, please see Material and Methods of our paper.
 
 ###Authors
 :man_with_gua_pi_mao: Preston Leung (preston@student.unsw.edu.au)
