@@ -12,8 +12,7 @@ if __name__ == '__main__':
     parser.add_argument('-f', '--file', help = 'EasyOutputShared file to be used.',  required = True)
     parser.add_argument('-o',  '--output_name',  help = 'Output file name.',  required = True)
     parser.add_argument('-t', '--threshold',  help ='Cut-off threshold',  required = True,  type = float)
-    #optional
-    parser.add_argument('-d',  '--directory',  help = 'Save directory path.')
+    
     
     
     if len(sys.argv) <= 1:

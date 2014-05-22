@@ -70,7 +70,7 @@ def printHistogram(identity,  hashTable, start,  end,  fileName):
             #print identity, int(keys)-Shift,  keys,  hashTable[keys]
             writeFile.write(identity + " ")
             writeFile.write(str(int(keys)-Shift) + " ")
-            writeFile.write(str(int(keys)-Shift) + " ")
+            writeFile.write(str(int(keys)-Shift + 1) + " ")
             writeFile.write(str(hashTable[keys]) + "\n")
     writeFile.close()
     
