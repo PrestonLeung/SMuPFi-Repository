@@ -95,12 +95,14 @@ def initialSearch(seqRef, seqRec, lowerBound, upperBound, refLowBound,  refHighB
             output.write("Reference:\n")
             
             for seqReference in seqRef:
+                
                 pre_AARef = seqReference.seq[startingCodon-1 : len(seqReference)].translate()                
                 my_AARef = pre_AARef[(startingAA - 1) : frameShift(refHighBound,  0, startingCodon)]
 
                 output.write("%s" %my_AARef + '\n')                
                 
-                for singleRecord in seqRec:                    
+                
+                for singleRecord in seqRec:
                     my_posString = ''
                     aaSeqHash = {}
                     refMutHash = {}
@@ -343,9 +345,9 @@ def secondSearch(diffHash,  fileName, refHash):
     else:
         try:
             if(SaveDirectory):
-                output = open(SaveDirectory + '/'+ fileName + '.txt',  'a')
+                output = open(SaveDirectory + '/'+ fileName + '_Summary.txt',  'a')
             else:
-                output = open(fileName + '.txt',  'a') 
+                output = open(fileName + '_Summary.txt',  'a') 
             try:
                 output.write("Common differences not found 378.")
             finally:
