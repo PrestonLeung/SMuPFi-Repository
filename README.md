@@ -31,9 +31,9 @@ There are many options implemented in the tool, and these can be viewed by runni
 `a_smupfi.py -h`
 
 The tool has **-f FASTAFILENAME**, **-r REFERENCEFILENAME** **-s SCOPE** and **-sc START_CODON** as
-required inputs where these are the basic details for searching shared mutations.
+required inputs where these are the basic details for searching shared mutations. The argument **-s SCOPE** is the nucleotide region of interest from reference sequence. For example, -s 1001-1500. The argument **-sc START_CODON** is the nucleotide position where the protein coding begins.
 
-General usage of a-smupfi will require the options **-g -gf FREQUENCY -m RANGE**, where -g signifies it is either global ShoRAH outputs which have .popl endings or generic fasta sequences. -gf is a decimal number tells a-smupfi the threshold at which sequences below the threshold are not included in the shared mutation search and -m is a mutation combination range (e.g 1-2 or 4-4) meaning it will search for combination of patterns from length 1 to 2 or length 4 to 4 respectively. 
+General usage of a-smupfi will require the options **-g -gf FREQUENCY -m RANGE**, where **-g** signifies it is either global ShoRAH outputs which have .popl endings or generic fasta sequences. -gf is a decimal number tells a-smupfi the threshold at which sequences below the threshold are not included in the shared mutation search and **-m** is a mutation combination range (e.g 1-2 or 4-4) meaning it will search for combination of patterns from length 1 to 2 or length 4 to 4 respectively. 
 
 Usage:
 
