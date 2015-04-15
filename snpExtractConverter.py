@@ -41,11 +41,11 @@ class InputError (Error):
 
 def printSummary(identity,  list, start,  end):    
 
-#   print id, position, position, frequency
+#   print id, position, position+1, frequency
 
     for item in list:
         if(item[0] >= start and item[0] <= end):
-            print identity,  item[0],  item[0],  item[1]
+            print identity,  item[0],  item[0]+1,  item[1]
 
 #    spaceSwitch = 1
 #    for item in list:

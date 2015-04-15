@@ -121,7 +121,7 @@ def smartIgnoreCheck(sequenceList,  position):
         else:
             return False
     else:
-        #print "Chk pt 5"
+        #print 'position = ', position ,"\n"
         #case 1 => e.g. G-G
         if(sequenceList[position - 1] == sequenceList[position + 1]):
             #print "Chk pt 5.1"
