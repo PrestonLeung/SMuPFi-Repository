@@ -3,6 +3,8 @@
 This is a readme file for the SMuPFi Package that contains guidelines and important notes about
 all the tools in this repository.
 
+If you use this tool please cite [(Leung et. al, Biomed Res Int, 2014)](http://dx.doi.org/10.1155/2014/264519)
+
 For the pipeline to work, these dependencies are required beforehand:
 
 1. Python2.7
